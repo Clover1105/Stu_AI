@@ -1,0 +1,449 @@
+"""
+一、选择题
+1 - 5：C        D        B        D        B
+6 -10：A        C        A        A(D)     D
+11-15：B        B(C)     B        B(ABC)   A
+16-20：B        B        A(A/D)   B        A
+21-25：B        B        A        C        C
+26-30：A        B        B        B        A
+31-35：B        A(A/D)   B        B        B
+36-40：D        B        B        C        B
+41-45：B        D(B)     A(B)     C        C
+46-50：A        B        B        C(B)     B
+51-55：B        A        A        B        B
+56-60：B        C        A        B        B
+61-63：B        B        B
+"""
+
+
+"""
+二、填空题
+1. x[::-1]
+2. 接收任意个位置参数     (把剩余的位置参数存到args元组中)
+3. 接收任意个关键字参数   (把剩余的关键字参数存到kwargs字典中)
+4. 闭包函数，方便调用     (是闭包和回调函数的语法糖)
+5. yield
+6. 将python对象转为json对象    (把python数据结构转为json字符串)
+7.(匹配正则的所有子串的列表)
+8. 当前时间的时间戳        (1970年1月1日 8时0分0秒（根据时区）到现在的时间（单位：秒）)
+9. __属性名
+10. 调用父类方法  (调用父类（级）的属性或方法)
+"""
+
+
+"""
+三、程序分析题
+1. a=20, b=10
+分析：a=10,b=20（定义变量）; a, b = b, a（将右边打包为元组，再解包赋值）
+
+2. [10, 20, 30]
+分析：y=x[:]是浅拷贝，y是新列表，修改y[1]不影响x
+
+3. 20
+分析：1>定义函数outer
+	  2>调用函数outer
+		outer[x=10，定义内部函数inner
+		    	 调用inner[x=20，将外层函数outer中的x修改为20]
+		   	 输出x，即20
+		  	 ]
+
+4. 8
+分析：1>定义函数fn()
+	  2>调用函数fn()，传入参数6，即n=6
+	  3>函数内部返回的是斐波那契数列
+		fn(0)=0, fn(1)=1
+		fn(2) = fn(1)+fn(0) = 1+0 = 1
+		fn(3) = fn(2)+fn(1) = 1+1 = 2
+		fn(4) = fn(3)+fn(2) = 2+1 = 3
+		fn(5) = fn(4)+fn(3) = 3+2 = 5
+		fn(6) = fn(5)+fn(4) = 5+3 = 8
+
+5. 2
+分析：x.get("b", 0) ：键 "b" 存在，值为 2，若不存在返回0
+	  x.get("c", 2)  ：键 "c" 不存在，返回默认值 2
+	  y = 2，输出2
+
+6. 1
+    2
+    生成器结束: done
+分析：1>定义函数gen()
+	  2>g=gen()，函数内部有生成器关键字，赋值，不调用
+	  3>next(g)，第一次调用函数gen()，函数停在yield 1，返回1
+	  4>next(g)，第二次调用函数gen()，函数停在yield 2，返回2
+	  5>next(g)，第三次调用函数gen()，函数返回done，触发StopIteration，返回生成器结束: done
+
+7. A init
+    B init
+    A fn
+    B fn
+分析：定义A类，定义B类
+	  创建B类对象，同时调用B类中的__init__方法
+	  	super().__init__()：调用父类即A类中的__init__方法，输出A init
+	  	输出B init
+	  调用B类中的fn()
+		super().fn()：调用父类即A类中的fn()，输出A fn
+		输出B fn
+
+8. leh
+分析：定义字符串变量s；将字符串中的每一个字符通过for进行遍历，遍历规则为从下标-3开始，-6结束，从右往左依次遍历输出，每次输出后不换行，无间隔
+
+9. ['13812345678', '13998765432']
+分析：导入re；定义字符串变量text；调用re模块中的findall() 函数，在 text 中查找所有符合正则表达式 "1[3-9]\d{9}" 的子串，并将结果赋值给变量 result；1[3-9]\d{9}--1开头，第二个数字的范围为3-9，后面接9个范围为0-9的数字
+
+10. 10 (Befor After 25)
+分析：定义函数decorator(fn)，@decorator 等价于 test = decorator(test)；调用函数test(5)，即decorator(test)(5)，注意fn=test，先调用decorator(test)返回wrapper，则decorator(test)(5)=wrapper(5)；调用wrapper(5)，输出Before，fn(*args, **kwargs)调用原来的test，即test(5)，返回5*2=10赋值给result，即result=10，输出After，返回result即10；print(test(5))=print(10)，输出10
+"""
+
+
+"""四、编程题"""
+# 1. 编写一个函数 reverse_string(s) ，接受字符串，返回反转后的字符串（不使用切片）。
+def reverse_string(s):
+    s1 = ""
+    for i in s:
+        s1 = i + s1
+    return s1
+a = "hello world"
+print(reverse_string(a))
+
+# 2. 编写一个函数 is_palindrome(n) ，判断一个正整数是否是回文数（如121、12321）。
+def is_palindrome(n):
+    n=str(n)
+    n1=n[::-1]
+    if n==n1:
+        return True
+    else:
+        return False
+print(is_palindrome(12321))
+
+# 3. 编写一个函数 flatten_list(nested) ，将嵌套列表展开为单层列表。
+# 例如： [1,[2,3],[[4,5]]] → [1,2,3,4,5]
+def flatten_list(nested):
+    ls = []
+    for i in nested:
+        try:
+            ls.extend(flatten_list(i))
+        except TypeError:
+            ls.append(i)
+    return ls
+l = [1,[2,3],[[4,5]]]
+print(flatten_list(l))
+# 老师的代码
+def flatten_list(nested):
+    if not isinstance(nested,list):
+        return [nested]
+    arr=[]
+    for el in nested:
+        el2=flatten_list(el)
+        arr+=el2
+    return arr
+l = [1,[2,3],[[4,5]]]
+print(flatten_list(l))
+
+# 4. 编写一个函数 count_words(text) ，统计字符串中每个单词出现的次数，返回字典。
+def count_words(text):
+    ls = text.split()
+    d = {}
+    for i in ls:
+        d[i] = ls.count(i)
+    return d
+s = "hello world hello world hello"
+print(count_words(s))
+# 老师的代码
+def count_words(text):
+    arr = text.split()
+    return {el:arr.count(el) for el in arr}
+s = "hello world hello world hello"
+print(count_words(s))
+
+# 5. 编写一个闭包函数 counter() ，每次调用返回递增的计数器。
+def counter():
+    con = 0
+    def lm():
+        nonlocal con
+        con+=1
+        return con
+    return lm
+c = counter()
+print(c())
+print(c())
+# 老师的代码
+def fn():
+    n = 0
+    def counter():
+        nonlocal n
+        n += 1
+        return n
+    return counter
+count = fn()
+print(count())
+print(count())
+print(count())
+
+# 6. 编写一个装饰器 timer ，计算函数执行时间。
+import time
+def timer(f):
+    def fn():
+        start = time.time()
+        x = f()
+        end = time.time()
+        print(x,end - start)
+    return fn
+@timer  # f=timer(f)
+def f():
+    return 10+20
+f()
+# 老师的代码
+import time
+def timer(cb):
+    def f():
+        start = time.time()
+        cb()
+        end = time.time()
+        return f"函数运行了{end-start}秒"
+    return f
+@timer
+def test():
+    time.sleep(1)
+print(test())
+
+# 7. 编写一个函数 memoize(f) ，实现记忆化装饰器，缓存函数结果。
+# 老师的代码
+def memoize(cb):
+    arr = []
+    def f():
+        res = cb()
+        arr.append(res)
+        return arr
+    return f
+@memoize
+def test():
+    return 10
+print(test())
+print(test())
+print(test())
+
+# 8. 编写一个生成器函数 primes(n) ，生成前n个素数。
+def primes(n):
+    for i in range(2,n+1):
+        for j in range(2,i):
+            if i%j==0:
+                break
+        else:
+            yield i
+p = primes(10)
+try:
+    for i in range(10):
+        print(next(p))
+except StopIteration:
+    print("end")
+# 老师的代码
+def is_prime(n):
+    if n == (1 or 2):
+        return True
+    for i in range(2,n//2+1):
+        if n % i == 0:
+            return False
+    return True
+def primes(n):
+    count = 1
+    start = 1
+    while count <= n:
+        if is_prime(start):
+            count += 1
+            yield start
+        start += 1
+res = primes(5)
+for i in range(5):
+    print(next(res))
+
+# 9. 编写一个类 Stack ，实现栈的 push、pop、peek、is_empty 操作。
+class Stack:
+    def __init__(self):
+        self.ls = []
+    def push(self,x):   # 添加
+        self.ls.append(x)
+    def pop(self):  # 删除
+        return self.ls.pop()
+    def peek(self): # 查看栈顶元素
+        return self.ls[-1]
+    def is_empty(self): # 判断是否为空
+        return len(self.ls) == 0
+s = Stack() # 创建一个栈对象，同时调用__init__()为该对象创建一个空列表
+s.push(1)
+s.push(2)
+s.push(3)
+print(s.ls)
+print(s.pop())
+print(s.peek())
+print(s.is_empty())
+
+# 10. 编写一个类 Student ：
+# 属性：name, age, scores（字典）
+# 方法：add_score(subject, score)、get_average()、get_letter_grade()
+# 字母等级：A(90+), B(80+), C(70+), D(60+), F(<60)
+class Student:
+    def __init__(self,name,age,scores):
+        self.name = name
+        self.age = age
+        self.scores = scores
+    def add_score(self,subject,score):  # 添加成绩
+        self.scores[subject] = score
+    def get_average(self):  # 计算平均分
+        avg = sum(self.scores.values()) / len(self.scores)
+        return avg
+    def get_letter_grade(self): # 计算等级
+        avg = self.get_average()
+        if avg >= 90:
+            return "A"
+        elif avg >= 80:
+            return "B"
+        elif avg >= 70:
+            return "C"
+        elif avg >= 60:
+            return "D"
+        else:
+            return "F"
+s = Student("Tom", 20, {"python": 90, "c++": 80, "java": 70})
+print(s.name, s.age, s.scores)
+s.add_score("linux", 90)
+print(s.scores)
+print(s.get_average())
+print(s.get_letter_grade())
+
+
+"""五、综合应用题"""
+"""
+实现一个简单的计算器类 Calculator，支持： 
+  加减乘除运算 
+  历史记录功能（记录每次运算） 
+  查看历史和清除历史的方法 
+  使用 __call__ 方法支持 calc(a, op, b) 语法调用
+"""
+class Calculator:
+    def __init__(self):
+        self.history_list = []
+    def __call__(self,a,op,b):
+        self.a = a
+        self.b = b
+        self.op = op
+        if self.op == "+":
+            self.result = self.add(self.a,self.b)
+        elif self.op == "-":
+            self.result = self.sub(self.a,self.b)
+        elif self.op == "*":
+            self.result = self.mul(self.a,self.b)
+        elif self.op == "/":
+            self.result = self.div(self.a,self.b)
+        else:
+            print("运算符错误")
+        return self.result
+    def add(self,a,b):  # 加法
+        self.history_list.append(f"{a} + {b} = {a + b}")
+        return print(f"{a} + {b} =", a + b)
+    def sub(self,a,b):  # 减法
+        self.history_list.append(f"{a} - {b} = {a - b}")
+        return print(f"{a} - {b} =", a - b)
+    def mul(self,a,b):  # 乘法
+        self.history_list.append(f"{a} * {b} = {a * b}")
+        return print(f"{a} * {b} =", a * b)
+    def div(self,a,b):  # 除法
+        self.history_list.append(f"{a} / {b} = {a / b}")
+        return print(f"{a} / {b} =", a / b)
+    def history(self):  # 查看历史记录
+        print("历史记录：")
+        for i in self.history_list:
+            print(i)
+    def clear_history(self):    # 清除历史记录
+        self.history_list.clear()
+        print("历史记录已清除",self.history_list)
+
+calc = Calculator()
+calc(100,"+",20)
+calc(100,"-",20)
+calc(100,"*",20)
+calc(100,"/",20)
+calc.history()
+calc.clear_history()
+
+"""
+用面向对象的类语法,实现一个学生成绩管理系统 GradeManager ： 
+  使用字典存储学生信息 
+  实现添加学生、删除学生、查找学生、修改成绩功能 
+  统计全班平均分、最高分、最低分 
+  使用正则表达式验证学号格式（8位数字）
+"""
+import re
+class GradeManager:
+    def __init__(self):
+        self.students = {}
+
+    def add_stu(self,id,name,*grade):
+        self.id = id
+        self.name = name
+        self.grade = grade
+        self.students[name] = {"id":self.id,"grade":self.grade}
+        print(f"学生{id}添加成功")
+
+    def del_stu(self):
+        if self.name:
+            self.students.pop(self.name)
+            print(f"学生{self.name}已删除")
+        else:
+            print(f"删除失败，学生{self.name}不存在")
+
+    def find_stu(self):
+        try:
+            stu = self.students[self.name]
+            print(f"学生{self.name}存在：",stu)
+        except KeyError:
+            print(f"学生{self.name}不存在")
+
+    def update_grade(self,*grade):
+        self.grade = grade
+        self.students[self.name]["grade"] = self.grade
+        print(f"学生{self.name}的成绩已更新")
+
+    def get_avg(self):
+        con = 0
+        l = len(self.grade)
+        for i in self.grade:
+             con += i
+        print(f"学生{self.name}的平均分是：{con/l:.2f}")
+
+    def get_max(self):
+        max_g = max(self.grade)
+        print(f"学生{self.name}的最高分是：{max_g}")
+
+    def get_min(self):
+        min_g = min(self.grade)
+        print(f"学生{self.name}的最低分是：{min_g}")
+
+    def stu_id(self):
+        if re.fullmatch(r"2026\d{4}$",str(self.id)):
+            print(f"学生{self.name}的学号是规范的")
+        else:
+            print(f"学生{self.name}的学号是不规范的")
+
+s1 = GradeManager()
+s2 = GradeManager()
+s3 = GradeManager()
+s4 = GradeManager()
+s1.add_stu("20261001", "A", 90,70,60)
+s2.add_stu("20261002", "b", 80,89,76)
+s3.add_stu("20261003", "C", 85,45,100)
+s4.add_stu("20261004", "D", 99,89,79)
+print()
+
+s1.del_stu()
+
+s1.find_stu()
+s3.find_stu()
+
+s2.find_stu()
+s2.stu_id()
+s2.update_grade(100,90,80)
+s2.find_stu()
+
+s3.get_avg()
+s4.get_max()
+s4.get_min()
