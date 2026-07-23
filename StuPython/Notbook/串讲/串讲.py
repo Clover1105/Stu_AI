@@ -1,0 +1,541 @@
+"""
+元宇宙：01-3可以不看，看群里面的编辑器与环境安装视频
+
+学习python语法：多进程、多线程、协程（先不看，面试前看，可能会被问到），网络基础可以看一下，网络编程不用看
+
+pyqt这一章都不看，这是桌面应用，我们用网页
+
+数据结构要学，笔记里面有网址（入班须知）--牛扣，力扣
+
+1.元宇宙；2.创客；3.跟老师走
+
+就业老师介入
+
+技术老师介入，改简历
+
+准备简历资料--项目资料，项目文档
+
+边找工作边学习算法，机器学习/深度学习算法开发
+"""
+from python基础考试.答辩 import fm
+
+"""
+变量 代替数据的设计思想
+两个语法：取值（取出它代替的数据），存值（数据保存到这个标识符中）
+
+思路（如何看到一个变量就想到她是存值还是取值）：
+1.
+=是一个运算符 -- 
+    a.先执行它右边的代码（重点：运行完），产生一个结果（只有一个某种类型的数据）
+    b.把这个结果赋值给等号左边的变量
+变量在=右边取值，=左边存值
+
+2.成员访问
+一定是取值操作
+x[y]=10 y变量是x的成员（索引） y就是取值操作
+a=x[y] y变量是x的成员（索引） y就是取值操作
+
+3.实参
+一定是取值操作
+fn(10)
+fn(a)   # a变量是取值，取出它保存的数据 传入函数内部 不是把a传入了 是把a的值传入了
+a=fn(a) # 左a存值，右a取值
+x[fn(a)]=10   # a变量是取值，取出它保存的数据 传入函数内部 不是把a传入了 是把a的值传入了
+print(a+20)    # a取值操作
+
+4.形参
+一定是存值操作
+def fn(a=10):   # a存值操作，存10
+    pass
+    =a
+    a=
+fn(100) # 将100传入a，a更新覆盖为100
+
+x=a(x)[x](x=x) # 左x存值，右第一个第二个第四个x取值操作，第三个x存值操作
+
+存值：
+    1.如果变量已经存在了，就会更新它保存的数据==》变量只能保存一个数据 根据代码运行时间先后关系 可能发生变化；
+    2.如果没有这个变量，就会在当前作用域创建/定义变量
+取值：
+    1.如果变量存在，就直接取最近（时间）一次保存的值；
+    2.变量不存在，就会在上一层作用域访问，没有继续在上上层访问，直到全局作用域还没有就报错
+"""
+x = 10
+y = 20
+x,y = y,x # 两次存取值
+print(x,y)
+# y,x取值，保存到开辟的元组内存空间中
+# 按下标依次赋值
+
+x = {"age":10}
+age = 20
+x = {age:30}
+print(x)
+
+# a=x if y else z   # xyz都是取值
+
+x(x)
+
+
+
+"""
+函数相关的语法
+1. 参数
+2. 返回值
+3. 函数调用时的运行语法（作用域）
+4. 函数的闭包
+5. 回调函数
+6. 装饰器
+7. 递归函数（函数自调用）
+8. 方法-->面向对象的语法
+9. 变量的注解
+10. 匿名函数
+
+"""
+
+"""
+1. 参数
+"""
+def fn():
+    # 写代码的区域（注意缩进）
+    print(666)
+print(111)
+fn()    # 前面fn属于访问函数，后面的()属于调用函数（运行函数的代码块【执行体】）
+# def关键字 函数定义之后相当于创建了一个数据，这个数据的类型是函数类型，fn就是这个函数的标识符，也就是函数的名字
+# 函数定义后，是不会运行代码块的，调用一次，运行一次代码块，调用n次，运行n次代码块
+fn()
+
+def fn(a,b,c):
+    print(a,b,c)
+fn(a = 10,b = 20,c = 30)    # 调用函数时传入参数，关键字传参
+fn(c = 30,a = 10,b = 20)    # 可以乱序
+fn(10,20,30)    # 传入位置参数
+fn(30,10,20)
+# python语法设计时，就明确规定了，函数调用时传入参数，位置参数不能放在关键字参数后面
+fn(10,b=20,c=30)    # 位置参数必须在关键字参数之前
+# positional 位置 argument 参数 keyword 关键字
+
+def fn(a,/,b,c):    # /：是占位的，/前不允许用关键字传参
+    print(a,b,c)
+# fn(a=10,b=20,c=30)    # 报错
+# fn(10,b=20,30)  # 报错
+fn(10,20,30)
+fn(10,20,c=30)
+a = 100
+fn(a,20,30) # 这里的a是取值，不是形参a，全局中没有定义a变量，会报错
+
+def fn(a,*,b,c):    # *：是占位的，*后必须用关键字传参
+    print(a,b,c)
+fn(10,20,30)    # 报错
+fn(10,b=20,c=30)
+fn(10,c=30,b=20)
+
+def fn(a,/,b,*,c):    # a是位置参数，b没有要求，c是关键字参数
+    print(a,b,c)
+fn(10,20,c=30)
+fn(10,b=30,c=20)
+
+def fn(a,b,c):
+    print(a,b,c)
+fn(10,20) # 不允许少传入参数
+fn(10,20,30,40)   # 不允许多传入参数
+
+print(10,20,30,40,50)
+
+def fn(a,b=10,c=20):    # b,c -- 默认参数
+    print(a,b,c)
+fn(100)
+fn(100,300)
+fn(100,300,500)
+
+def fn(a,*,b=10,c=20):    # b,c -- 默认参数，必须是关键字参数
+    print(a,b,c)
+fn(100)
+fn(100,b=300)
+fn(100,b=300,c=500)
+
+"""
+rest aguments（剩余参数） -- 关键字不定长 位置不定长
+"""
+def fn(a,b,*c): # c将剩余的位置参数返回为元组
+    print(a,b,c)
+fn(10,20,30,40) # c是元组
+fn(10,20,(30,40))   # c只有一个元组元素
+fn(10,20)   # c依然是元组，空元组
+
+def fn(a,b,**c): # c将剩余的关键字参数返回为字典
+    print(a,b,c)
+fn(10,20)   # c为空字典
+fn(10,b=20,c=30)    # c只有{c:30}，b=20是形参b的
+fn(10,20,x=20,c=30,y=40)
+
+"""
+调用的解包语法
+"""
+a=[10,20,30]
+b=[*a]
+print(b)    # b = [10,20,30] <== b=[a[0],a[1],a[2]]
+b=[a]
+print(b)    # [[10,20,30]]
+print(*a)
+
+def fn(a,b,c):
+    print(a,b,c)
+a=[10,20,30]
+fn(*a)  # fn(10,20,30)
+
+a=[10,20,30]
+b=[100,200,*a,400]
+print(b)
+
+def fn(a,b,c):
+    print(a,b,c)
+c = "c"
+x = {"a":10,"b":20,c:30}
+fn(a=x["a"],b=x["b"],c=x[c])
+fn(**x)
+
+"""
+2. 返回值
+"""
+def fn():
+    x=10
+    return 100,x,[50,60],"a"
+    print(666)
+    print(x)
+    return 200
+y=fn()
+print(y)
+
+def fn():
+    x = 100
+    print(1111)
+    yield x # 第一次停止，暂停
+    print(6666)
+    yield 200
+    print(1234)
+y = fn()
+print(y)    # 返回了生成器对象
+# a = next(y) # 迭代
+# print(a)
+# b = next(y)
+# print(b)
+# c = next(y) # 报错，没有yield生成了
+for i in y:
+    print("iiiiiii",i)
+
+"""
+3. 作用域
+
+脚本运行时 会生成一个作用域scoped 我们称为全局作用域
+在一个作用域内部 可以 1.定义：函数 变量 类 2.使用：函数 变量 类
+
+函数运行时（调用函数） 也会生成一个作用域scoped 我们称为局部作用域，这个作用域生成在函数定义的作用域内部
+在这一个作用域内部 可以 1.定义：函数 变量 类 2.使用：函数 变量 类
+
+2.使用：函数 变量 类
+在某个作用域内 使用函数 变量 类
+    如果是 取 -- 会在当前作用域内部去取 当前作用域内部没有定义 就去上一层作用域取 一直到上一层 全局都没有 就取环境中的
+    如果是 存 -- 会在当前作用域直接赋值（当前有就更新 当前没有就直接创建）
+    总结：访问一个变量取值 会不会 函数外面取函数里面的变量 -- 不会
+"""
+class A:
+    x = 200
+x=10
+def fn():   # 在全局定义
+    x = 100
+    a = 30
+    def fm():
+        print(1111)
+        a = 100
+        a = 200
+        print(a)    # 10
+    print(999)
+    print(x)
+    fm()
+# print(y)    # 报错
+a = 10
+fn()    # 调用函数，在全局生成
+a = 20
+print(x)
+a1=A()
+
+def fn(a):
+    x = 100
+    x = a + 100
+fn(10)
+fn(20)  # 每调用一次就会开辟一个新的内存空间（作用域），作用域之间相互独立
+
+def fn():
+    print(x)    # 20
+x=20
+def fm():
+    x=10
+    print(x)    # 10
+    fn()    # fn定义在全局，作用域创建在全局
+fm()
+
+def fn():
+    x = 10
+    def fm():
+        print(x)    # 30
+    x = 30
+    return fm
+x = 20
+y = fn()    # 返回fm函数对象，函数也是一种数据
+print(y)
+y() # fm()
+
+"""综合分析"""
+x=30
+def fn():
+    print(x)    # 20
+def fm(cb):
+    x=10
+    cb()    # fn()
+x=20
+fm(fn)
+
+x = 300
+def fm():
+    x = 10
+    def fn():
+        print(x)    # 30
+    x = 30
+    return fn
+x = 20
+fg = fm()
+fg()
+
+def fn():
+    print(111)
+    fn()    # 自调用，fn内没有，全局有
+fn()
+
+"""
+3.闭包
+4.回调函数
+5.装饰器
+"""
+# 符合nuicode编码的都可以作为变量名，但是做题时不能选中文
+# print(__name__) # 全局都没有声明，python官方在环境中声明了
+
+
+"""面试题"""
+def fun(n=None,o=None):
+    print(o)
+    def fn(m):
+        return fun(m,n)
+    return fn
+a=fun("华")("清")
+a("远")
+a("见")
+b=fun("华")("清")("远")
+b("见")
+"""
+伪代码：用{}表示函数 用[]表示作用域
+全局[
+fun==>{}
+a==>fun("华")("清")==>[n="华",o=None,print(o) 打印None,fn={} return fn
+                        fun("华")("清")==>[m="清",return fun("清","华")]
+                     ]
+fun("清","华")==>[n="清",o="华",print(o) 打印"华",fn={} return fn
+                 a("远")==>[m="远",return fun("远","清")]
+                 a("见")==>[m="见",return fun("见","清")]
+                 ]
+a("远")==>fun("远","清")==>[n="远",o="清",print(o) 打印"清",fn={} return fn]
+a("见")==>fun("见","清")==>[n="见",o="清",print(o) 打印"清",fn={} return fn]
+
+b=fun("华")("清")("远")==>[n="华",o=None,print(o) 打印None,fn={} return fn
+                            fun("华")("清")==>[m="清",return fun("清","华")]
+                           ]
+fun("清","华")==>[n="清",o="华",print(o) 打印"华",fn={} return fn
+                fun("华")("清")("远")==>[m="远",return fun("远","清")]
+                ]
+fun("远","清")==>[n="远",o="清",print(o) 打印"清",fn={} return fn
+                b("见")==>[m="见",return fun("见","远")]
+                ]
+b("见")
+fun("见","远")==>[n="见",o="远",print(o) 打印"远",fn={} return fn]
+]
+"""
+
+
+# A作用域def定义了函数，B作用域调用了这个函数，函数的代码在A作用域运行
+
+"""
+闭包就是函数
+ 函数内部定义的局部函数 返回的这个局部函数就是闭包
+"""
+def fn():
+    age = 100
+    def fm():
+        print("hbsdbusfb",age)
+    return fm
+cl = fn()
+cl()
+
+
+def alipay():
+    money = 5000000
+    def pay():
+        print("支付宝支付",money)
+    return pay
+alipay()
+
+def meituan_waimai():
+    pay = alipay()
+    pay()
+meituan_waimai()
+
+"""
+回调函数
+函数也是一种特殊的数据类型的数据，函数调用的时候传入的数据可以是：字符串、数字、列表等等数据 包括函数
+"""
+def fn(cb):
+    print(666)
+fn(10)
+fn([10,20,30])
+def fm():
+    print("vhldvhl")
+fn(fm)  # 调用fn，传入fm函数
+fn(fm())    # 调用fn，传入fm函数执行的结果
+# callback
+
+def fn(x):
+    print("fn内部的代码")
+    print(x+10)
+fn(100)
+
+def fn(x):
+    print("fn内部的代码")
+    print(x[0])
+fn([10,20,30])
+
+def fn(x):
+    print("fn内部的代码")
+    x()
+def fm():
+    print("vyishnsdvsdv")
+fn(fm)
+
+def get_date(data_name,cd):
+    x = {"jack":[99,88,77,66],
+         "karen":[96,85,74,63],
+         "marry":[123,145,78,173]}  # 假装该字典就是数据库
+    data = x[data_name] # 伪代码 假装这个代码运行了很久 实际有5w行代码
+    cd(data)
+def use_data(data):
+    print("使用数据",data)
+get_date("marry",use_data)
+
+x = [100,-30,20,40]
+y = sorted(x)   # 从小到大排序
+print(y)
+
+x = [100,-30,20,40]
+def fn(el):
+    print(el,"123456789")
+    return el**2
+y = sorted(x,key=fn)
+print(y)
+
+"""
+装饰器
+@fn
+def fm():
+    print("fmmmmmmmmmmmmmm")
+等价于 
+fm = fn(fm)
+"""
+def fn(cb):
+    print("fn11111111")
+    def f():
+        print("ffffffffff")
+        cb()
+        print("nnnnnnnnnn")
+    return f
+@fn # fm = fn(fm) ==> fm = f
+def fm():
+    print("fmmmmmmmmm")
+fm()
+
+@fn
+def fm2():
+    print("fm222222222222")
+fm2()
+
+def fn(x):
+    def fn2(cb):
+        def f():
+            pass
+        return f
+    def fn3(cb):
+        pass
+    if x > 10:
+        return fn2
+    else:
+        return fn3
+
+@fn(10) # fn(10)=fn2 ==> fm = fn2(fm) ==> fm = f
+# fn2和fn3才是真正的装饰器
+def fm():
+    print("fmmmmmmmmmmmmmm")
+
+
+def fn(cb): # f2
+    print("fnnnnnnnnnnn")
+    def f1():
+        print("f11111")
+        cb()
+        print("fnnnnnn11111")
+    return f1
+def fm(cb): # f3
+    print("fmmmmmmmmmm")
+    def f2():
+        print("f222222")
+        cb()
+        print("fmmmmmmmmm222222")
+    return f2
+def fg(cb): # fk
+    print("fgggggg")
+    def f3():
+        print("f333333")
+        cb()
+        print("fgggggggg333333")
+    return f3
+@fn   # fk = fm(fk)   fk=f1
+@fm   # fk = fm(fk)   fk=f2
+@fg   # fk = fg(fk)   fk=f3
+def fk():
+    print("fkkkkkkkkkkkkkkkkkkk")
+fk()
+"""
+1. 定义函数fn\fm\fg，不执行；定义被装饰函数fk（原始函数），也不执行
+2. 执行装饰器从下往上，先 @fg，再 @fm，最后 @fn（注意：装饰器函数本身在定义阶段已经定义好了，这里是在执行装饰器）
+    执行装饰器的同时会打印装饰器内部函数外面的print
+    装饰器代码只在 @ 语法执行时运行一次，之后 fk() 被调用时，执行的是内部函数 f1、f2、f3 的代码，而不是装饰器函数本身。
+3. @fg 执行：将原始fk作为参数传入fg，fk=fg(fk)，cb=原始fk，打印 "fgggggg"，定义内部函数f3，返回f3，fk=f3
+4. @fm 执行：将f3作为参数传入装饰器fm，cb = f3 ，打印 "fmmmmmmmmmm"，定义内部函数f2，返回f2，fk=f2
+5. @fn 执行：将f2作为参数传入装饰器fn，cb = f2 ，打印 "fnnnnnnnnnnn"，定义内部函数f1，返回f1，此时fk指向的是f1，fk=f1，装饰完成
+6. 执行fk()，但fk指向的是f1，所以实际执行f1函数
+7. 执行f1函数，打印：print("f11111")，回调：cb()=f2()
+8. 执行f2函数，打印：print("f222222")，回调：cb()=f3()
+9. 执行f3函数，打印：print("f333333")，回调：cb()=原始fk()--fg闭包保存的最原始未装饰的fk
+10. 执行fk函数，打印：print("fkkkkkkkkkkkkkkkkkkk")
+11. 注意：上面的f1\f2\f3代码均没有执行完毕，需要继续执行
+12. 回到f3，继续打印print("fgggggggg333333")
+13. 回到f2，继续打印print("fmmmmmmmmm222222")
+14. 回到f1，继续打印print("fnnnnnn11111")
+15.所有代码执行完毕，结束运行
+"""
+
+
+
+
+
+
+
+
+
+
