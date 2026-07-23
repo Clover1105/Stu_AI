@@ -1,0 +1,27 @@
+# PyCharm specific files
+.idea/
+*.iml
+
+# Python virtual environment
+venv/
+env/
+.venv/
+
+# Python cache files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# Something is so big that we need to ignore it
+蒋应龙/大文件夹
+蒋应龙/大文件.mp4
