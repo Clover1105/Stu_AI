@@ -1,0 +1,53 @@
+from langchain_chroma import Chroma
+from langchain_core.documents import Document
+from langchain_huggingface import HuggingFaceEmbeddings
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+
+text = """
+人工智能（Artificial Intelligence，AI）是研究如何让计算机模拟人类智能行为的技术，近年来广泛应用于智能问答、图像识别和自动驾驶等领域。
+长城是中国古代重要的军事防御工程，东起山海关，西至嘉峪关，是世界文化遗产之一，也是中华文明的重要象征。
+珠穆朗玛峰位于中国与尼泊尔交界处，海拔8848.86米，是世界最高峰，吸引着众多登山爱好者前往挑战。
+蓝鲸是目前地球上已知体型最大的动物，成年蓝鲸体长可超过30米，体重可达180吨以上，主要生活在海洋中，以磷虾为食。
+光合作用是绿色植物利用阳光、水和二氧化碳制造有机物并释放氧气的过程，是地球生态系统能量循环的重要基础。
+人体正常体温通常在36.3℃至37.2℃之间，当体温持续超过38℃时，一般认为出现发热症状，应结合具体情况及时就医。
+篮球是一项团队竞技运动，每支球队由五名队员同时上场比赛，比赛目标是将篮球投进对方篮筐获得更高得分。
+Python 是一种高级编程语言，具有语法简洁、生态丰富、学习成本低等特点，被广泛应用于数据分析、人工智能、Web 开发和自动化运维等领域。
+太阳系共有八大行星，它们按照距离太阳由近到远依次是水星、金星、地球、火星、木星、土星、天王星和海王星。
+咖啡是世界上最受欢迎的饮品之一，主要由咖啡豆烘焙研磨后冲泡而成，不同产地和烘焙程度会影响咖啡的香气与口感。
+"""
+
+# 加载分词器对象
+txt_splitter = RecursiveCharacterTextSplitter(
+    chunk_size=1000,
+    chunk_overlap=20,
+    separators=["\n\n", "\n", "。", "，", " "]
+)
+
+# 分割文本
+txt = txt_splitter.split_text(text)
+
+# 转为document对象
+txt_doc = [Document(page_content=t,metadata={"source":"测试.txt"}) for t in txt]
+
+# 创建向量化模型
+em_model = HuggingFaceEmbeddings(
+    # 模型路径
+    model_name = r"G:\models\paraphrase-multilingual-MiniLM-L12-v2",
+    # 本地化
+    model_kwargs={
+        "device": "cuda",
+        "local_files_only": True,
+    }
+)
+try:
+    # 存入到向量数据库中
+    Chroma.from_documents(
+        documents=txt_doc,
+        embedding=em_model,
+        persist_directory=r"G:\GitHub\Stu_AI\StuRAG\chromadb_data",
+        collection_name="cs02",
+        collection_metadata={"hnsw:space":"cosine"}
+    )
+    print("存入成功")
+except Exception as e:
+    print(f"存入失败{e}")

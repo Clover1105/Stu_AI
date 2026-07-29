@@ -22,6 +22,19 @@ build/
 dist/
 *.egg-info/
 
+# unnecessary files
+StuFastAPI/class/
+
 # Something is so big that we need to ignore it
-蒋应龙/大文件夹
-蒋应龙/大文件.mp4
+
+# ChromaDB 向量数据库文件
+chromadb_data/
+
+# 模型文件
+*.bin
+*.pt
+*.pth
+*.safetensors
+
+# NumPy缓存文件
+*.npz
