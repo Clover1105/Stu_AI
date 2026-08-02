@@ -24,6 +24,7 @@ dist/
 
 # unnecessary files
 StuFastAPI/class/
+StuRagApp/src/class
 
 # Something is so big that we need to ignore it
 

@@ -1,20 +1,11 @@
-from langchain_chroma import  Chroma
+# 导入
+from langchain_core.output_parsers import StrOutputParser
+from langchain_chroma import Chroma
 from langchain_core.prompts import PromptTemplate
-
-from Load import LoadLLM
-from Load import LoadEmbeddingModel
-
-# 查询问题
-question = "珠穆朗玛峰在哪？"
-
-"""
-    问题【用户输入，客户端】 --->  目的【基于用户的问题生成回答】
-    RAG 流程：
-        1、让LLM如何来生成回复【提示词】
-        2、提示词：需要告诉模型上下文内容是什么，问题是什么，以及生成回复时的规则
-        3、为了得到上下文信息，这里需要得到向量数据库的检索器对象
-        4、构造langchain链 --- 管道运算符
-"""
+from langchain_core.runnables import RunnablePassthrough, RunnableLambda, RunnableParallel
+from Load.LoadEmbeddingModel import load_embedding_model
+from Load.LoadLLM import load_model
+from Load.LoadReranker import load_reranker
 
 # 创建提示词
 template = """
@@ -44,7 +35,72 @@ prompt = PromptTemplate(
 vector = Chroma(
     collection_name="cs02",
     persist_directory=r"G:\GitHub\Stu_AI\StuRAG\chromadb_data",
-    embedding_function=LoadEmbeddingModel.load_embedding_model()
+    embedding_function=load_embedding_model()
 )
-retriever = vector.as_retriever(search_kwargs={"k": 3})
 
+# 转为检索器接口
+retriever = vector.as_retriever(search_kwargs={"k": 5})
+
+# 问题
+wt = "长城是什么？"
+
+# 打印召回结果
+def zh_answer(run_lambda):
+    print("检索到的文档内容：")
+    for i in run_lambda:
+        print(i.page_content)
+        print("*-"*20)
+    return run_lambda
+
+# 重排序
+def re_sort(data):
+    print("\n开始重排：")
+    # 创建重排序模型
+    reranker = load_reranker()
+    # 获取召回结果
+    cons = data['context']
+    # 获取问题
+    que = data['question']
+    # 问题和召回文档 进行包装 构造reranker输入
+    reranker_input = [(que,con.page_content) for con in cons]
+    # 调用重排序模型，计算得分
+    scores = reranker.compute_score(reranker_input)
+    # print(f"得分：\n{scores}\n")
+    # 文档和分数进行包装
+    con_score = list(zip(cons,scores))
+    # print(f"包装后的文档和得分：\n{con_score}\n")
+    # 排序
+    con_score.sort(key=lambda x: x[1], reverse=True)
+    # print(f"重排序后的文档和得分：\n{con_score}\n")
+    # 获取排序后的文档
+    cons_sorted = [con[0] for con in con_score]
+    # print(f"重排序后的文档：")
+    for i,item in enumerate(cons_sorted[:3]):
+        print(f"【第{i+1}条】：{item.page_content}")
+
+    # 返回排序后的文档
+    return {
+        "context": cons_sorted,
+        "question": que
+    }
+
+# 创建langchain链
+chain = (
+    # 并行执行器
+    RunnableParallel(
+        {
+            # 上下文，内容就是检索的内容
+            "context": retriever | RunnableLambda(zh_answer),
+            # 透明传递，原样返回/输出
+            "question": RunnablePassthrough(),
+        }
+    )
+    | RunnableLambda(re_sort) # 重排序
+    | prompt   # 提示词
+    | load_model() # 大模型
+    | StrOutputParser() # 转字符串
+)
+
+# 测试
+ce_shi = chain.invoke(wt)
+print(f"\n回答：\n{ce_shi}")

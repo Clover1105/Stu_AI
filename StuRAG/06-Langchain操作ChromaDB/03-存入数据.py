@@ -18,7 +18,7 @@ Python 是一种高级编程语言，具有语法简洁、生态丰富、学习�
 
 # 加载分词器对象
 txt_splitter = RecursiveCharacterTextSplitter(
-    chunk_size=1000,
+    chunk_size=100,
     chunk_overlap=20,
     separators=["\n\n", "\n", "。", "，", " "]
 )
