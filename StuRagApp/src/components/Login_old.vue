@@ -13,8 +13,13 @@
 <script setup>
 import {ref, getCurrentInstance} from "vue";
 
+import {useRouter} from "vue-router"; // 导入路由对象
+let router = useRouter(); // 创建路由跳转对象
+
+import {ElMessage} from "element-plus"; // 导入弹窗组件
+
 // 定义变量
-let email = ref("2920242909@qq.com");
+let email = ref("");
 let code = ref("");
 let isCode = ref(true);
 
@@ -36,12 +41,17 @@ function sendEmail() {  // 发送验证码的函数
     console.log("接收到的数据：", res)
     let code = res.data.code;
     let msg = res.data.msg;
+    let data = res.data.data;
     // 逻辑判断处理 --- 【=== ：表示全等（数据类型和值都相等为true） ； == ：表示值相等就为true】
     if (code === 200) {
       isCode.value = !isCode.value;
-      alert(msg);
+
+      // 将用户名存储到sessionStorage中 -- setItem(key,value)、getItem(key)
+      sessionStorage.setItem("username", data);
+
+      ElMessage.info(msg);
     } else {
-      alert(msg);
+      ElMessage.error(msg);
     }
   })
 }
@@ -59,9 +69,12 @@ function checkCode() {
     console.log("接收到的数据：", res)
     let result = res.data;
     if (result.code === 200) {
-      alert(result.msg);
+      ElMessage.success(result.msg);
+      setTimeout(() => {
+        router.push("/chat");
+      }, 1000)
     } else {
-      alert(result.msg);
+      ElMessage.error(result.msg);
     }
   })
 }
