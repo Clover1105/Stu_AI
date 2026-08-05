@@ -56,3 +56,26 @@ def check_code(checkCodeEntity: CheckCodeEntity):
     print("==========进入check_code==========")
     print(f"接收到的对象：{checkCodeEntity}")
     return UsersService.check_code(checkCodeEntity)
+
+# 通过EventSource创建出来的对象实现SSE，只支持get请求方式；
+# 如果想要用POST请求，可以用原生的fetch请求或者找有没有第三方集成的库
+
+@users_router.get(
+# 请求路径
+    path="/chat",
+    # 接口简短摘要，显示在 Swagger UI 的接口列表中
+    summary="聊天",
+    # 接口详细描述，显示在 Swagger UI 的接口详情中
+    description="""
+        聊天
+        访问路径：http://localhost:8000/users/chat
+        请求参数：
+            question：用户问题
+        返回值：
+            流式输出：sse
+    """,
+)
+def chat(question: str):
+    print("==========进入chat==========")
+    print(f"接收到问题：{question}")
+    return UsersService.chat(question)

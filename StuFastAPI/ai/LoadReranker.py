@@ -1,8 +1,11 @@
 from FlagEmbedding import FlagReranker
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # 加载重排序模型
 def load_reranker():
     return FlagReranker(
-        model_name_or_path=r"G:\models\bge-reranker-large",
+        model_name_or_path=os.getenv("RERANKER_MODEL_PATH"),
         use_fp16=True
     )

@@ -1,0 +1,26 @@
+from common import MySQLUtil
+
+# 查询历史记录菜单栏
+def query_history_menu(username):
+    conn = MySQLUtil.get_mysql_conn()
+    cur = conn.cursor() # 获取游标
+    sql = 'select history_id,question,create_time from history where username = %s and parent_id = 0;'
+    cur.execute(sql, [username])    # 执行sql语句
+    result = cur.fetchall() # 获取所有结果
+    MySQLUtil.close_mysql_conn(cur, conn)   # 关闭连接
+    return result
+
+# 查询某条历史记录详情
+def conversation_log(historyId):
+    conn = MySQLUtil.get_mysql_conn()
+    cur = conn.cursor() # 获取游标
+    sql = 'select question,answer from history where history_id = %s or parent_id = %s order by history_id asc;'
+    cur.execute(sql, [historyId, historyId])    # 执行sql语句
+    result = cur.fetchall() # 获取所有结果
+    MySQLUtil.close_mysql_conn(cur, conn)   # 关闭连接
+    return result
+
+# 测试
+if __name__ == '__main__':
+    # print(query_history_menu('xjj'))
+    print(conversation_log(1))

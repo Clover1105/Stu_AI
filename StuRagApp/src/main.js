@@ -9,6 +9,11 @@ const app = createApp(App)
 import router from "./router"
 app.use(router)
 
+// 注册 element-plus
+import ElementPlus from 'element-plus'
+import 'element-plus/dist/index.css'
+app.use(ElementPlus)
+
 // axios 全局配置
 import axios from 'axios'   // 导入 axios 包
 axios.defaults.baseURL = 'http://localhost:8000/'   // 服务器请求路径公共部分

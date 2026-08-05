@@ -29,6 +29,24 @@ app.include_router(
     tags=["text"]   # 配置swaggerUI中的模块名称
 )
 
+# 导入子路由对象
+from chat.controller.ChatController import chat_router
+# 注册子路由
+app.include_router(
+    router=chat_router,    # 引入子路由对象
+    prefix="/chat", # 配置访问子路由接口的前缀，默认“”，推荐写为模块的包名作为区分
+    tags=["chat"]   # 配置swaggerUI中的模块名称
+)
+
+# 导入子路由对象
+from chat.controller.HistoryController import history_router
+# 注册子路由
+app.include_router(
+    router=history_router,    # 引入子路由对象
+    prefix="/history", # 配置访问子路由接口的前缀，默认“”，推荐写为模块的包名作为区分
+    tags=["history"]   # 配置swaggerUI中的模块名称
+)
+
 # 静态资源配置
 from fastapi.staticfiles import StaticFiles
 app.mount(

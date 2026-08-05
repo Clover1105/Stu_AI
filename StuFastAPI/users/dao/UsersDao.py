@@ -11,7 +11,7 @@ def check_email(email):
     cur.execute(sql, [email])
     # 5. 获取结果
     result = cur.fetchall()
-    # print(f"获取的结果为: {result}")    # 结果为一个列表，表示有数据
+    print(f"获取的结果为: {result}")    # 结果为一个列表，表示有数据
     # 6. 关闭连接
     MySQLUtil.close_mysql_conn(cur, conn)
     # 返回结果

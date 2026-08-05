@@ -12,6 +12,11 @@ const routes = [
         // 一个页面的访问路径就是一个 js 对象，至少包含 2 个属性：path、component
         path: '',   // 访问路径，和服务器的请求路访问规则一致
         component: () => import('../components/Login.vue')    // 访问组件
+    },
+    {
+        // 一个页面的访问路径就是一个 js 对象，至少包含 2 个属性：path、component
+        path: '/chat',   // 访问路径，和服务器的请求路访问规则一致
+        component: () => import('../components/Chat.vue')    // 访问组件
     }
 ]
 

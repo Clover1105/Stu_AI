@@ -12,13 +12,21 @@ from email.mime.text import MIMEText
 import smtplib
 # 加载redis工具
 from common import RedisUtil
+# 加载大模型
+from ai import LoadLLM
 
 # 发送邮件
 def send_email(email):
     # 1. 验证邮箱是否输出注册过的用户
     flag = False
+
+    # 取出当前邮箱号的用户名
+    result = UsersDao.check_email(email)
+    username = result[0]["username"]
+    print(f"取出的用户名为：{username}")
+
     # isinstance(a,b)：返回布尔，判断a是不是b类型（b的实例）
-    if isinstance(UsersDao.check_email(email), list):
+    if isinstance(result, list):
         flag = True
 
     # 2. 根据结果判断是否发送邮箱
@@ -80,7 +88,7 @@ def send_email(email):
         return {
             "code": 200,
             "msg": f"邮件已发送成功，到 {email}",
-            "data": None
+            "data": username
         }
 
     except Exception as e:
@@ -120,5 +128,19 @@ def check_code(checkCodeModel):
         "data": None
     }
 
+def chat(question):
+    # 加载模型
+    llm = LoadLLM.create_model()
+    # 聊天
+    return {
+        "code": 200,
+        "msg": "成功",
+        "data": llm.invoke([
+            {"role": "user", "content": question}
+        ]).content
+    }
+
 if __name__ == "__main__":
     print(send_email("c@qq.com"))
+
+

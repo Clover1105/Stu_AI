@@ -25,8 +25,8 @@ dist/
 *.egg-info/
 
 # unnecessary files
-StuFastAPI/class/
-StuRagApp/src/class
+**/class/
+**/law_chromadb/
 
 # Something is so big that we need to ignore it
 
