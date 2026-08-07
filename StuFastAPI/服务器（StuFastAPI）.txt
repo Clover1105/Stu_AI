@@ -1,0 +1,177 @@
+卷 My Passport 的文件夹 PATH 列表
+卷序列号为 8C52-9B65
+G:.
+│  main.py
+│  test_main.http
+│  .env
+│  test.py
+│  .env.example
+│  tree.txt
+│  
+├─.idea
+│  │  workspace.xml
+│  │  StuFastAPI.iml
+│  │  modules.xml
+│  │  misc.xml
+│  │  vcs.xml
+│  │  .gitignore
+│  │  
+│  └─inspectionProfiles
+│          profiles_settings.xml
+│          
+├─__pycache__
+│      main.cpython-312.pyc
+│      
+├─ai
+│  │  __init__.py
+│  │  LoadLLM.py
+│  │  LoadEmbeddingModel.py
+│  │  LoadReranker.py
+│  │  LoadChroma.py
+│  │  
+│  └─__pycache__
+│          __init__.cpython-312.pyc
+│          LoadEmbeddingModel.cpython-312.pyc
+│          LoadLLM.cpython-312.pyc
+│          LoadReranker.cpython-312.pyc
+│          LoadChroma.cpython-312.pyc
+│          
+├─users
+│  │  __init__.py
+│  │  
+│  ├─dao
+│  │  │  __init__.py
+│  │  │  UsersDao.py
+│  │  │  
+│  │  └─__pycache__
+│  │          __init__.cpython-312.pyc
+│  │          UsersDao.cpython-312.pyc
+│  │          
+│  ├─controller
+│  │  │  __init__.py
+│  │  │  UsersController.py
+│  │  │  
+│  │  └─__pycache__
+│  │          __init__.cpython-312.pyc
+│  │          UsersController.cpython-312.pyc
+│  │          
+│  ├─entity
+│  │  │  __init__.py
+│  │  │  CheckCodeEntity.py
+│  │  │  
+│  │  └─__pycache__
+│  │          __init__.cpython-312.pyc
+│  │          CheckCodeEntity.cpython-312.pyc
+│  │          
+│  ├─service
+│  │  │  __init__.py
+│  │  │  UsersService.py
+│  │  │  
+│  │  └─__pycache__
+│  │          __init__.cpython-312.pyc
+│  │          UsersService.cpython-312.pyc
+│  │          
+│  ├─utils
+│  │      __init__.py
+│  │      
+│  └─__pycache__
+│          __init__.cpython-312.pyc
+│          
+├─chat
+│  │  __init__.py
+│  │  
+│  ├─controller
+│  │  │  __init__.py
+│  │  │  ChatController.py
+│  │  │  HistoryController.py
+│  │  │  
+│  │  └─__pycache__
+│  │          __init__.cpython-312.pyc
+│  │          HistoryController.cpython-312.pyc
+│  │          ChatController.cpython-312.pyc
+│  │          
+│  ├─dao
+│  │  │  __init__.py
+│  │  │  HistoryDao.py
+│  │  │  ChatDao.py
+│  │  │  
+│  │  └─__pycache__
+│  │          __init__.cpython-312.pyc
+│  │          HistoryDao.cpython-312.pyc
+│  │          ChatDao.cpython-312.pyc
+│  │          
+│  ├─entity
+│  │  │  __init__.py
+│  │  │  ConversationResultEntity.py
+│  │  │  
+│  │  └─__pycache__
+│  │          __init__.cpython-312.pyc
+│  │          ConversationResultEntity.cpython-312.pyc
+│  │          
+│  ├─service
+│  │  │  __init__.py
+│  │  │  ChatService.py
+│  │  │  HistoryService.py
+│  │  │  
+│  │  └─__pycache__
+│  │          __init__.cpython-312.pyc
+│  │          HistoryService.cpython-312.pyc
+│  │          ChatService.cpython-312.pyc
+│  │          
+│  ├─utils
+│  │  │  __init__.py
+│  │  │  IntentionUtil.py
+│  │  │  
+│  │  └─__pycache__
+│  │          __init__.cpython-312.pyc
+│  │          IntentionUtil.cpython-312.pyc
+│  │          
+│  └─__pycache__
+│          __init__.cpython-312.pyc
+│          
+├─common
+│  │  __init__.py
+│  │  MySQLUtil.py
+│  │  RedisUtil.py
+│  │  
+│  └─__pycache__
+│          __init__.cpython-312.pyc
+│          MySQLUtil.cpython-312.pyc
+│          RedisUtil.cpython-312.pyc
+│          
+├─static
+│  └─upload
+│          1785387496.jpg
+│          
+├─class
+│  │  __init__.py
+│  │  TestController.py
+│  │  TestController2.py
+│  │  TestService2.py
+│  │  main2.py
+│  │  test.py
+│  │  分包思想.txt
+│  │  项目实现流程
+│  │  
+│  └─no_use
+│          WorkController.py
+│          WorkService.py
+│          TestController.py
+│          
+├─templates
+├─create_data
+│      __init__.py
+│      LawDataBuild.py
+│      客服数据集.csv
+│      法律数据集.csv
+│      
+└─law_chromadb
+    │  chroma.sqlite3
+    │  
+    └─a46849bc-9f9d-4399-ac06-cbd6832a3775
+            header.bin
+            data_level0.bin
+            length.bin
+            link_lists.bin
+            index_metadata.pickle
+            

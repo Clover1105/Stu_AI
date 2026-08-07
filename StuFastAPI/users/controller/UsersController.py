@@ -64,7 +64,7 @@ def check_code(checkCodeEntity: CheckCodeEntity):
 # 请求路径
     path="/chat",
     # 接口简短摘要，显示在 Swagger UI 的接口列表中
-    summary="聊天",
+    summary="去聊天页面",
     # 接口详细描述，显示在 Swagger UI 的接口详情中
     description="""
         聊天

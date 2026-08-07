@@ -1,8 +1,4 @@
 from users.dao import UsersDao
-# 加载环境信息
-import os
-from dotenv import load_dotenv
-load_dotenv()
 # 随机数
 import random
 # api
@@ -14,13 +10,17 @@ import smtplib
 from common import RedisUtil
 # 加载大模型
 from ai import LoadLLM
+# 加载环境信息
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # 发送邮件
 def send_email(email):
     # 1. 验证邮箱是否输出注册过的用户
     flag = False
 
-    # 取出当前邮箱号的用户名
+    # 取出当前邮箱号的用户名 -- 需要数据库
     result = UsersDao.check_email(email)
     username = result[0]["username"]
     print(f"取出的用户名为：{username}")
@@ -51,11 +51,13 @@ def send_email(email):
 
     # 创建邮件对象 -- 将要发送的信息写在这个对象里面
     message = MIMEText(content, "plain", "utf-8")
+    print(f"创建的邮件对象为：{message}")
 
     # 添加内容在 message对象中
     message["From"] = sender    # 发件人
     message["To"] = email   # 收件人
     message["Subject"] = subject    # 主题
+    print(f"添加内容后的邮件对象为：{message}")
 
     try:
         # 创建邮件发送服务配置
@@ -99,14 +101,17 @@ def send_email(email):
             "data": None
         }
 
-def check_code(checkCodeModel):
+# 验证码的验证
+def check_code(checkCodeEntity):
     # 取出用户传递过来的验证码和邮箱号
-    email = checkCodeModel.email
-    code = checkCodeModel.code
+    email = checkCodeEntity.email
+    code = checkCodeEntity.code
+
     # 通过用户输入的邮箱号，从redis中取出验证码
     r = RedisUtil.get_redis_conn()
     redis_code = r.get(email)
     RedisUtil.close_redis_conn(r)
+
     # 判断验证码是否过期
     if redis_code is None:  # 过期
         return {
@@ -114,6 +119,7 @@ def check_code(checkCodeModel):
             "msg": "验证码已过期",
             "data": None
         }
+
     # 没有过期，但验证码不一致
     if redis_code != code:
         return {
@@ -121,6 +127,7 @@ def check_code(checkCodeModel):
             "msg": "验证码错误",
             "data": None
         }
+
     # 没有过期，且验证码一致
     return {
         "code": 200,
@@ -128,6 +135,7 @@ def check_code(checkCodeModel):
         "data": None
     }
 
+# 聊天
 def chat(question):
     # 加载模型
     llm = LoadLLM.create_model()

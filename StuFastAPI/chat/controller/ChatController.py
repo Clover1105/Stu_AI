@@ -30,7 +30,7 @@ def chat(question: str, historyId: int):
     # 流式输出处理
     def generator():
         for item in ChatService.chat(question,historyId):
-            # print(item.content)
+            # print(item) # <starlette.responses.StreamingResponse object at 0x0000016B64244CB0>
             yield f"data:{json.dumps({'content':item},ensure_ascii=False)}\n\n"
         yield f"data:{json.dumps({'content':'end_end'})}\n\n"
     return StreamingResponse(

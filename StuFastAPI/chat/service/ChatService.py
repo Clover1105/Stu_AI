@@ -16,13 +16,13 @@ def chat(question,historyId):
     if historyId == 0:  # 若为新对话，id为0
         history = []
     else:
-        history = HistoryService.conversation_log(historyId)['data']
+        history = HistoryService.conversation_log(historyId)['data']    # [{}, {}]
 
     # 意图识别
     is_legal = instention_recognition(question)["is_legal"]
     llm = create_model()    # 创建大模型对象
     # 判断用户的问题是否走RAG检索
-    if not is_legal:
+    if not is_legal:    # 不合法
         history.append({"role": "user", "content": question})
         # 直接LLM回复
         for chunk in llm.stream(history):
@@ -94,7 +94,7 @@ def chat(question,historyId):
         # 获取排序后的文档
         cons_sorted = [con[0] for con in con_score]
         # print(f"重排序后的文档：")
-        for i,item in enumerate(cons_sorted[:3]):
+        for i,item in enumerate(cons_sorted[:5]):
             print(f"【第{i+1}条】：{item.page_content}")
 
         # 返回排序后的文档

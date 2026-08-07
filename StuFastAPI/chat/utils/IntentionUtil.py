@@ -41,7 +41,18 @@ def instention_recognition(question):
         {"role": "system", "content": intention_prompt},
         {"role": "user", "content": question}
     ])
-    return json.loads(rs.content)
+    print(f"\n意图识别结果 -- rs: {rs}\n")
+    """
+    意图识别结果 -- rs: 
+    content='{"is_legal": false, "confidence": "high"}' 
+    additional_kwargs={} 
+    response_metadata={'model': 'qwen2.5:7b', 'created_at': '2026-08-07T01:06:03.9603814Z', 'done': True, 'done_reason': 'stop', 'total_duration': 40265647800, 'load_duration': 23917345700, 'prompt_eval_count': 366, 'prompt_eval_duration': 15495132000, 'eval_count': 13, 'eval_duration': 826864000, 'logprobs': None, 'model_name': 'qwen2.5:7b', 'model_provider': 'ollama'} 
+    id='lc_run--019fd9c0-d6ef-74a1-b958-89e1ac08aea9-0' 
+    tool_calls=[] 
+    invalid_tool_calls=[] 
+    usage_metadata={'input_tokens': 366, 'output_tokens': 13, 'total_tokens': 379}
+    """
+    return json.loads(rs.content)   # loads() -- JSON转换为字典
 
 # 测试
 if __name__ == "__main__":

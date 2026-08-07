@@ -2,8 +2,8 @@ import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 // https://vite.dev/config/
-export default defineConfig({
-  plugins: [vue()],
+export default defineConfig({ // 设置项目启动的配置项
+  plugins: [vue()], // 引入 vue 插件
   // 设置启动的端口号 -- 默认5173
   server:{
     host:'localhost',

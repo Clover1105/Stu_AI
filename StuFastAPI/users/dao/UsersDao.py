@@ -16,3 +16,8 @@ def check_email(email):
     MySQLUtil.close_mysql_conn(cur, conn)
     # 返回结果
     return result
+
+if __name__ == "__main__":
+    print(check_email("c@qq.com"))
+
+# [{'users_id': 1001, 'username': 'clover', 'email': 'c@qq.com', 'create_time': datetime.datetime(2026, 7, 30, 11, 37, 29)}]

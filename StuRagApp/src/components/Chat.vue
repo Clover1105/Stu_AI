@@ -134,7 +134,7 @@
                             size="large"
                             :disabled="isLoading"
                             @keyup.enter="chat"
-                        >
+                        >     <!-- @keyup.enter="chat"   按下Enter键时触发 -->
                             <template #suffix>
                                 <el-button
                                     type="primary"
@@ -144,7 +144,7 @@
                                     :disabled="isLoading || !question.trim()"
                                     @click="chat"
                                     class="send-btn"
-                                />
+                                />  <!-- @click="chat"   点击按钮时触发 -->
                             </template>
                         </el-input>
                     </div>
@@ -181,13 +181,13 @@ let question = ref("");
 // 定义保存聊天消息的对象
 let messages = ref([])
 
-// 定义一个变量，用于控制按钮的禁用状态
-let isLoading = ref(false);
+// 定义一个变量，用于控制发送按钮的禁用状态
+let isLoading = ref(false); // 默认不禁用
 
 // 历史记录测试数据
-const searchKeyword = ref("");
-const assistantAvatar = ref("");
-const historyList = ref([]);
+const searchKeyword = ref("");  // 存储搜索关键字
+const assistantAvatar = ref("");  // 存储助手头像
+const historyList = ref([]);  // 存储历史记录列表
 const quickPrompts = ref([
     { text: "帮我写一段代码" },
     { text: "解释一个技术概念" },
@@ -196,7 +196,7 @@ const quickPrompts = ref([
 ]);
 const currentChatID = ref(0)  // 存储当前点击的是哪一个对话窗口的 historyId
 
-// 聊天函数
+// 聊天函数 -- 点击发送按钮和enter键时触发
 function chat() {
   // 基于用户输入的内容判断是否输入的有效内容
   let myQuestion = question.value.trim(); // trim()：去除字符串首尾的空格
@@ -204,16 +204,16 @@ function chat() {
     ElMessage.warning("请输入有效内容");
     return;
   }
-  isLoading.value = true;
-  question.value = "";  // 清空输入框
+  isLoading.value = true; // 聊天按钮点击时，设置isLoading为true，表示正在聊天中，禁用发送按钮
+  question.value = "";  // 点击发送按钮后，立即清空输入框
 
-  // 访问服务器
+  // 访问服务器 -- 往聊天列表末尾加消息
   messages.value.push({role: 'user', content: myQuestion});
   messages.value.push({role: 'assistant', content: '思考中，请耐心等待^3^......'});
 
   // 构造SSE请求
   // 创建参数对象
-  let urlSerchParams = new URLSearchParams({
+  let urlSerchParams = new URLSearchParams({  // URLSearchParams 是浏览器原生提供的一个对象。它的唯一作用，就是把一个键值对字典，转换成符合网络标准的 URL 查询参数格式。
     question: myQuestion,
     historyId: currentChatID.value
   });
@@ -246,7 +246,7 @@ function chat() {
   // }
 }
 
-// 查询聊天历史记录菜单栏
+// 查询聊天历史记录菜单栏 -- 进入页面后自动执行
 function query_history_menu() {
     proxy.$axios({
         url: "history/queryHistoryMenu",
@@ -256,11 +256,13 @@ function query_history_menu() {
         }
     })
     .then(res => {
+      // 第一个 .data 是 Axios 框架的固定格式（Axios 自动包装的），第二个 .data 才是后端自定义的字段名
+      // { data: {'code': 200, 'msg': '...', 'data': [...]}, status: 200 }  里面的那个data才是我们需要的数据
       historyList.value = res.data.data;
     })
 }
 
-// 查询某一条详细的对话记录
+// 查询某一条详细的对话记录 -- 点击某一个历史记录时触发
 function conversationLog(historyId){
     // console.log(historyId);
     currentChatID.value = historyId;  // 存储当前点击的是哪一个对话窗口的 historyId

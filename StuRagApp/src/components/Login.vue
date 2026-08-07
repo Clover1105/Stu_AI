@@ -53,6 +53,7 @@ import {ref, getCurrentInstance} from "vue";
 import {useRouter} from "vue-router";
 import {ElMessage} from "element-plus";
 import {Message, Key, Promotion, CircleCheck} from "@element-plus/icons-vue";
+
 let router = useRouter();
 let email = ref("");
 let code = ref("");
@@ -70,10 +71,10 @@ function sendEmail() {
       email: sendEmail
     },
   }).then(res => {
-    console.log("接收到的数据：", res)
+    console.log("接收到的数据：", res.data)
     let code = res.data.code;
     let msg = res.data.msg;
-    let data = res.data.data;
+    let data = res.data.data; // 接收用户名
     if (code === 200) {
       isCode.value = !isCode.value;
       sessionStorage.setItem("username", data);
@@ -94,7 +95,7 @@ function checkCode() {
     method: 'post',
     data: JSON.stringify(checkCode)
   }).then(res => {
-    console.log("接收到的数据：", res)
+    console.log("验证的返回结果：", res.data)
     let result = res.data;
     if (result.code === 200) {
       ElMessage.success(result.msg);
@@ -107,6 +108,8 @@ function checkCode() {
   })
 }
 </script>
+
+
 <style scoped>
 .login-container {
   width: 100%;
