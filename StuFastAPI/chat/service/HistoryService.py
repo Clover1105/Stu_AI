@@ -12,7 +12,7 @@ def query_history_menu(username):
             'time': item['create_time'].strftime('%Y-%m-%d %H:%M:%S'),
             "active": "false"
         })
-    print(f"\n查找菜单栏结果 -- data_list: {data_list}\n")
+    # print(f"\n查找菜单栏结果 -- data_list: {data_list}\n")
     # 查找菜单栏结果 -- data_list: [{'historyId': 4, 'title': '你好！', 'time': '2026-08-04 10:57:05', 'active': 'false'}]
     return {
         'code': 200,
@@ -23,7 +23,7 @@ def query_history_menu(username):
 # 查询某条历史记录详情
 def conversation_log(historyId):
     results = HistoryDao.conversation_log(historyId)
-    print(f"\n查找记录详情结果 -- results: {results}\n")
+    # print(f"\n查找记录详情结果 -- results: {results}\n")
     """
     查找记录详情结果 -- results: 
     [{'question': 'hello', 'answer': "Hey! 👋 What's up?"}, 

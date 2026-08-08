@@ -8,6 +8,7 @@ from ai.LoadChroma import load_chroma_conn
 from chat.service import HistoryService
 from chat.utils.IntentionUtil import instention_recognition
 from chat.dao import ChatDao
+from chat.utils import BM25Util,RRFUtil
 
 
 
@@ -21,6 +22,7 @@ def chat(question,historyId):
     # 意图识别
     is_legal = instention_recognition(question)["is_legal"]
     llm = create_model()    # 创建大模型对象
+
     # 判断用户的问题是否走RAG检索
     if not is_legal:    # 不合法
         history.append({"role": "user", "content": question})
@@ -29,6 +31,7 @@ def chat(question,historyId):
             if chunk.content:
                 yield chunk.content
         return
+
     # 创建提示词
     template = """
         你是一名知识库问答助手，请结合提供的知识内容回答用户问题。
@@ -59,15 +62,32 @@ def chat(question,historyId):
     vector = load_chroma_conn()
 
     # 转为检索器接口
-    retriever = vector.as_retriever(search_kwargs={"k": 10})
+    v_retriever = vector.as_retriever(search_kwargs={"k": 10})
 
     # 打印召回结果
-    def zh_answer(run_lambda):
-        print("检索到的文档内容：")
+    def zh_answer(t,run_lambda):
+        print(f"\n{t}到的文档内容：")
+        print(run_lambda)
+        print("*-"*20)
         for i in run_lambda:
             print(i.page_content)
             print("*-"*20)
         return run_lambda
+
+    # 混合检索函数
+    def rrf_retriever():
+        # 向量
+        v_result = v_retriever.invoke(question)
+        zh_answer("向量检索",v_result)
+        # bm25
+        bm25,docs = BM25Util.build_bm25_index(vector)
+        b_result = BM25Util.bm25_search(bm25,question,docs,10)
+        zh_answer("bm25检索",b_result)
+        # rrf
+        rrf_result = RRFUtil.rrf(v_result,b_result)
+        zh_answer("rrf检索",rrf_result)
+        # 返回结果
+        return rrf_result
 
     # 重排序
     def re_sort(data):
@@ -96,6 +116,7 @@ def chat(question,historyId):
         # print(f"重排序后的文档：")
         for i,item in enumerate(cons_sorted[:5]):
             print(f"【第{i+1}条】：{item.page_content}")
+        print()
 
         # 返回排序后的文档
         return {
@@ -110,7 +131,7 @@ def chat(question,historyId):
         RunnableParallel(
             {
                 # 上下文，内容就是检索的内容
-                "context": retriever | RunnableLambda(zh_answer),
+                "context": RunnableLambda(lambda _ : rrf_retriever()),
                 # 对话历史记录
                 "history": RunnableLambda(lambda _: history),
                 # 透明传递，原样返回/输出
@@ -146,3 +167,7 @@ def save_conversation_result(conversationResultEntity):
         "message": "保存失败",
         "data": None
     }
+
+if __name__ == '__main__':
+    for chunk in chat("《中华人民共和国反家庭暴力法》第十五条规定了什么内容？", 1):
+        print(chunk)

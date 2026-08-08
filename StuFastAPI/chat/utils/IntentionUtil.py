@@ -41,7 +41,7 @@ def instention_recognition(question):
         {"role": "system", "content": intention_prompt},
         {"role": "user", "content": question}
     ])
-    print(f"\n意图识别结果 -- rs: {rs}\n")
+    # print(f"\n意图识别结果 -- rs: {rs}\n")
     """
     意图识别结果 -- rs: 
     content='{"is_legal": false, "confidence": "high"}' 
