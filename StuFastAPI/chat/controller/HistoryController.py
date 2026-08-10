@@ -28,6 +28,13 @@ def delete_history(historyId: int):
     print(f"\n开始删除历史记录 -- historyId: {historyId}\n")
     return HistoryService.delete_history(historyId)
 
+@history_router.get(
+    path="/searchHistory",
+    summary="搜索历史记录",
+)
+def search_history(username: str, searchHistory: str):
+    return HistoryService.search_history(username, searchHistory)
+
 if __name__ == '__main__':
     # print(query_history_menu('xjj'))
     # print(conversation_log(1))

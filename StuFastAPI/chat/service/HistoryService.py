@@ -61,9 +61,25 @@ def delete_history(historyId):
         'data': None
     }
 
+def search_history(username, searchHistory):
+    results = HistoryDao.search_history(username, searchHistory)
+    # 包装结果
+    data_list = []
+    for item in results:
+        data_list.append({
+            'historyId': item['history_id'],
+            'title': item['question'],
+            'time': item['create_time'].strftime('%Y-%m-%d %H:%M:%S'),
+        })
+    return {
+        'code': 200,
+        'msg': '搜索历史记录成功',
+        'data': data_list
+    }
 
 # 测试
 if __name__ == '__main__':
     # print(query_history_menu('clover'))
     # print(conversation_log(1)['data'])
-    print(delete_history(12))
+    # print(delete_history(12))
+    print(search_history('clover', '你'))

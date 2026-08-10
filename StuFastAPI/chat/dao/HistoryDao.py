@@ -38,8 +38,26 @@ def delete_history(historyId):
         MySQLUtil.close_mysql_conn(cur, conn)   # 关闭连接
         return is_TF
 
+def search_history(username, searchHistory):
+    conn = MySQLUtil.get_mysql_conn()
+    cur = conn.cursor() # 获取游标
+    try:
+        sql = 'select history_id,question,create_time from history where username = %s and parent_id = 0 and question like %s;'
+        cur.execute(sql, [username, '%'+searchHistory+'%'])    # 执行sql语句
+        result = cur.fetchall() # 获取所有结果
+        print(f"搜索历史记录成功，id：{result[0]['history_id']}")
+        return result
+    except Exception as e:
+        print(f"搜索历史记录失败：{e}")
+        return None
+    finally:
+        MySQLUtil.close_mysql_conn(cur, conn)   # 关闭连接
+
 # 测试
 if __name__ == '__main__':
-    # print(query_history_menu('xjj'))
+    # print(query_history_menu('clover'))
     # print(conversation_log(1))
-    print(delete_history(12))
+    # print(delete_history(12))
+    print(search_history('clover', '你'))
+
+

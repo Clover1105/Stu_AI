@@ -20,6 +20,7 @@
                     :prefix-icon="Search"
                     size="small"
                     clearable
+                    @keyup.enter="searchHistory"
                 />
             </div>
 
@@ -327,6 +328,28 @@ const confirmEvent = (historyID) => {
 // 删除历史记录 -- 取消删除
 const cancelEvent = () => {
   console.log('cancel!')
+}
+
+// 模糊搜索历史记录
+function searchHistory(){
+  let mySearchKeyword = searchKeyword.value.trim(); //trim()：去除字符串首尾的空格
+  if (mySearchKeyword.length === 0) { // 判断是否输入了数据
+    ElMessage.warning("请输入有效内容");
+    return;
+  }
+  searchKeyword.value = "";
+  proxy.$axios({
+    url: '/history/searchHistory',
+    method: 'get',
+    params: {
+      username: username.value,
+      searchHistory: mySearchKeyword,
+    }
+  }).then(res => {
+    console.log(res.data)
+    historyList.value = res.data.data;
+  })
+
 }
 
 // 加载页面后自动执行
