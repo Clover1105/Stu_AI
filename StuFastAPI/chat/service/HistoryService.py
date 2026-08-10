@@ -47,7 +47,23 @@ def conversation_log(historyId):
         'data': data_list
     }
 
+def delete_history(historyId):
+    result = HistoryDao.delete_history(historyId)
+    if not result:
+        return {
+            'code': 500,
+            'msg': '删除历史记录失败',
+            'data': None
+        }
+    return {
+        'code': 200,
+        'msg': '删除历史记录成功',
+        'data': None
+    }
+
+
 # 测试
 if __name__ == '__main__':
-    print(query_history_menu('clover'))
-    print(conversation_log(1)['data'])
+    # print(query_history_menu('clover'))
+    # print(conversation_log(1)['data'])
+    print(delete_history(12))

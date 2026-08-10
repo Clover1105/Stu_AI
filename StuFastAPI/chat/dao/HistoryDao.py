@@ -20,7 +20,26 @@ def conversation_log(historyId):
     MySQLUtil.close_mysql_conn(cur, conn)   # 关闭连接
     return result
 
+def delete_history(historyId):
+    conn = MySQLUtil.get_mysql_conn()
+    cur = conn.cursor() # 获取游标
+    is_TF = 0
+    try:
+        sql = 'delete from history where history_id = %s or parent_id = %s;'
+        cur.execute(sql, [historyId, historyId])    # 执行sql语句
+        conn.commit()
+        print(f"删除历史记录成功：{cur.rowcount}条数据被删除")
+        is_TF = 1
+    except Exception as e:
+        print(f"删除历史记录失败：{e}")
+        conn.rollback()
+        is_TF = 0
+    finally:
+        MySQLUtil.close_mysql_conn(cur, conn)   # 关闭连接
+        return is_TF
+
 # 测试
 if __name__ == '__main__':
     # print(query_history_menu('xjj'))
-    print(conversation_log(1))
+    # print(conversation_log(1))
+    print(delete_history(12))
