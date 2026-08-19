@@ -1,5 +1,7 @@
 from fastapi import FastAPI
+
 print("加载了main.py")
+
 # 启动项目和关闭项目分别执行一些内容
 from contextlib import asynccontextmanager
 @asynccontextmanager
@@ -16,6 +18,7 @@ async def start_rnd_run(app):
     print("启动项目")
     yield
     print("关闭项目")
+
 # 创建 FastAPI 对象
 app = FastAPI(lifespan=start_rnd_run)
 # app = FastAPI()

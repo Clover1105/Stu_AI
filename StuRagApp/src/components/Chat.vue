@@ -39,11 +39,11 @@
                     </div>
                     <!-- 更多操作：删除等 -->
 <!--                    <el-icon :size="14" class="history-more" @click.stop><MoreFilled /></el-icon>-->
-                  <el-popconfirm title="Are you sure to delete this?" @confirm="confirmEvent(item.historyId)" @cancel="cancelEvent">
-                    <template #reference>
-                      <el-button class="history-more" @click.stop>Delete</el-button>
-                    </template>
-                  </el-popconfirm>
+                    <el-popconfirm title="Are you sure to delete this?" @confirm="confirmEvent(item.historyId)" @cancel="cancelEvent">
+                      <template #reference>
+                        <el-button class="history-more" @click.stop>Delete</el-button>
+                      </template>
+                    </el-popconfirm>
                 </div>
             </div>
 

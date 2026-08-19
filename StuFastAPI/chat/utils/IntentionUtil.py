@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 import json
 
-def instention_recognition(question):
+def intention_recognition(question):
     llm = ChatOllama(
         model=os.getenv("OLLAMA_MODEL_NAME"),
         base_url=os.getenv("OLLAMA_BASE_URL"),
@@ -56,7 +56,7 @@ def instention_recognition(question):
 
 # 测试
 if __name__ == "__main__":
-    re = instention_recognition("今天天气真好，适合去公园散步。")
+    re = intention_recognition("今天天气真好，适合去公园散步。")
     print(re)
     print(type(re))
 

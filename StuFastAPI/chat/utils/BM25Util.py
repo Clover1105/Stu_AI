@@ -29,6 +29,7 @@ def tokenize(txts):
 def build_bm25_index(vector):
     # 获取所有文档
     docs = vector.get()
+    # print(f"\n获取到的文档内容：\n{docs}\n\n")
     # 取出数据
     ids = docs['ids']
     documents = docs['documents']
@@ -46,7 +47,7 @@ def bm25_search(bm25, question, docs, k=10):
     que_cut = tokenize(question)
     # 获取得分
     scores = bm25.get_scores(que_cut)   # 返回的是一个数组 -- []
-    # print(scores)
+    print(scores)
     # 排序
     sort_scores = sorted(range(len(scores)), key=lambda i: scores[i], reverse=True)[:k]
     # 返回结果
@@ -54,6 +55,7 @@ def bm25_search(bm25, question, docs, k=10):
 
 if __name__ == '__main__':
     vector_db = LoadChroma.load_chroma_conn()
+    build_bm25_index(vector_db)
     bm25, docs = build_bm25_index(vector_db)
     r = bm25_search(bm25, "公安机关接到家庭暴力报案后应当做什么事情？", docs)
     print(r)

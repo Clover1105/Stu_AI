@@ -6,7 +6,7 @@ from ai.LoadLLM import create_model
 from ai.LoadReranker import load_reranker
 from ai.LoadChroma import load_chroma_conn
 from chat.service import HistoryService
-from chat.utils.IntentionUtil import instention_recognition
+from chat.utils.IntentionUtil import intention_recognition
 from chat.dao import ChatDao
 from chat.utils import BM25Util,RRFUtil
 
@@ -20,7 +20,7 @@ def chat(question,historyId):
         history = HistoryService.conversation_log(historyId)['data']    # [{}, {}]
 
     # 意图识别
-    is_legal = instention_recognition(question)["is_legal"]
+    is_legal = intention_recognition(question)["is_legal"]
     llm = create_model()    # 创建大模型对象
 
     # 判断用户的问题是否走RAG检索

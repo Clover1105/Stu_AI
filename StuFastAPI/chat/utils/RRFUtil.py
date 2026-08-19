@@ -7,9 +7,13 @@ def rrf(v_result,b_result):
     for index,score in enumerate(v_result,start=1):
         scores[score.id] = scores.get(score.id,0)+round(1/(60+index),4)
         docs[score.id] = score
+    # print(scores)
+    # print(docs)
     for index,doc in enumerate(b_result,start=1):
         scores[doc.id] = scores.get(doc.id,0)+round(1/(60+index),4)
         docs[doc.id] = doc
+    # print(type(scores.items()))
+    # print(scores.items())
     sorted_scores = sorted(scores.items(),key=lambda x:x[1],reverse=True)
     # print(sorted_scores)
     result = [docs[id] for id,score in sorted_scores]
