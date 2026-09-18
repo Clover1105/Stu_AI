@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <!-- Vue2 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.7.14/dist/vue.js"></script>
+    <!-- Markdown解析库 marked CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+</head>
+
+
+<body>
+    <div id="app">
+        <div>{{chatList}}</div>
+        <input type="text"  v-model="input" placeholder="请输入聊天内容"><br>
+        <button type="button" @click="send">发送</button>
+    </div>
+</body>
+
+
+<script>
+    new Vue({
+        el:"#app",   // 绑定html元素
+        data:{  // 定义数据和变量
+            chatList:[],    // 聊天内容
+            input:"",    // 输入内容
+            userId:"",  // 用户id
+        },
+        methods:{   // 函数
+            send(){ // 发送
+                // 问题不能为空
+                if(this.input.trim() === ""){
+                    return;
+                }
+                // 添加用户信息
+                this.chatList.push({
+                    type:"user",
+                    content:this.input,
+                    time:new Date(),
+                });
+                // 创建空AI消息，用于流式追加
+                const aiMsg = {
+                    role: "ai",
+                    content: "正在思考，请稍等....",
+                    time:new Date(),
+                };
+                this.chatList.push(aiMsg);
+                // 定义参数格式
+                const params = `question=${encodeURIComponent(this.input)}&user_id=${encodeURIComponent(this.userId)}`;
+                // 创建流式对象
+                const eve = new EventSource("/chat?"+params);
+                // 监听事件
+                eve.onmessage = (e) => {
+                    // 打印流式输出
+                    console.log(e.data);
+                    // 把字符串格式的字典转换成json
+                    const data = JSON.parse(e.data);
+                    // 是否关闭流式
+                    if (data.done){
+                        // 关闭流式
+                        eve.close();
+                    } else {
+                        // 相当于 "正在思考" in aiMsg.content
+                        if (aiMsg.content.indexOf("正在思考") > -1) {
+                            aiMsg.content = "";
+                        }
+                        // 追加AI消息
+                        aiMsg.content += data.data;
+                    }
+                }
+            }
+        }
+    })
+
+</script>
+
+
+</html>
