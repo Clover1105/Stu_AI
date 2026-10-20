@@ -829,15 +829,7 @@ data = result["messages"][-1].content
 session_manager.save_window_memory("assistant", data)
 ```
 
-
-
-# ssssssss
-
-
-
-
-
-## （四）验证
+## （七）验证
 
 ```python
 from langchain_core.messages import HumanMessage
@@ -915,7 +907,7 @@ if __name__ == '__main__':
 
 # 三、摘要记忆
 
-## （二）流程
+## （一）流程
 
 摘要记忆（Summary Memory）的流程可以概括为**“数据存取、上下文注入、异步提炼”**三个核心环节
 
@@ -944,7 +936,7 @@ if __name__ == '__main__':
 - **大模型提炼**：将“旧摘要”和“新对话”组合成提示词，交给 `SummaryAgent` 中的大模型。大模型根据预设规则（保留重要信息、去除闲聊、控制在200字以内等）生成一段高度浓缩的新摘要。
 - **持久化存储**：最终，`SummaryMemory.save_summary()` 会将这段新摘要通过 `UPSERT`（有则更新，无则插入）的方式安全地写回 PostgreSQL 数据库，完成一次记忆的迭代。
 
-## （三）存储和查询
+## （二）存储和查询
 
 ```python
 class SummaryMemory:
@@ -987,7 +979,7 @@ class SummaryMemory:
 - `INSERT INTO conversation_summary(session_id, summary) VALUES({self.session_id},{summary}) ON CONFLICT(session_id) DO UPDATE SET summary=EXCLUDED.summary,update_time=NOW()` -- 尝试向表中插入一条新记录，如果因为主键或唯一键冲突导致插入失败，则自动更新该条已存在的记录
 - `fetchonr` -- 用于从查询结果集中获取下一行数据，返回一个元组，如果没有更多数据则返回 `None`
 
-## （四）会话管理
+## （三）会话管理
 
 会话管理中只需要创建实例就可以了，供后续智能体调用，执行摘要的读取与保存
 
@@ -1011,7 +1003,7 @@ class SessionManager:
     ......
 ```
 
-## （五）提示词
+## （四）提示词
 
 查询已有的摘要记忆，拼接到提示词中，返回给会话管理统一使用
 
@@ -1046,7 +1038,7 @@ class BuilderPrompt:
         return prompt
 ```
 
-## （六）Agent记忆提取
+## （五）Agent记忆提取
 
 初始化摘要智能体的同时：
 
@@ -1117,7 +1109,7 @@ class SummaryAgent:
         self.summary_memory.save_summary(result['messages'][-1].content)
 ```
 
-## （七）记忆管理器
+## （六）记忆管理器
 
 初始化记忆管理器的同时：创建摘要智能体实例对象，窗口记忆实例对象
 
@@ -1146,7 +1138,7 @@ class MemoryManager:
             self.summary_agent.update(query_window)
 ```
 
-## （八）验证
+## （七）验证
 
 创建聊天智能体，用于生成用户问题的回复
 
